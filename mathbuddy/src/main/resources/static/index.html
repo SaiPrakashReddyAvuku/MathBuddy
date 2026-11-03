@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathBuddy 🦉 Voice AI Math Tutor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════ TOP NAV -->
+  <header class="top-nav">
+    <div class="top-nav-inner">
+      <div class="brand" onclick="goHome()">
+        <div class="brand-icon">🦉</div>
+        <div class="brand-text">Math<span>Buddy</span></div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Active child pill -->
+        <div class="active-child-pill hidden" id="activeChildPill" onclick="showProfileSelect()" title="Switch active learner">
+          <div class="child-avatar-mini" id="navAvatar">🦉</div>
+          <span id="navChildName">Learner</span>
+          <span style="font-size:0.8rem; opacity:0.8;">⇄</span>
+        </div>
+
+        <!-- Voice sound toggle -->
+        <button class="mb-btn mb-btn-small mb-btn-outline" id="soundBtn" onclick="toggleSound()" title="Turn voice speech ON or OFF">
+          🔊 Voice ON
+        </button>
+
+        <!-- Progress quick link -->
+        <button class="mb-btn mb-btn-small mb-btn-sky hidden" id="navProgressBtn" onclick="showProgressScreen()">
+          📊 Progress
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════ MAIN -->
+  <main class="main-container">
+
+    <!-- ─── SCREEN 1: PROFILE SELECTION ("Who's learning today?") ─────── -->
+    <section id="screenProfiles" class="mb-card">
+      <div class="owl-mascot-container">
+        <!-- Barnaby Owl Local SVG -->
+        <svg class="owl-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="65" rx="42" ry="46" fill="#8D6E63"/>
+          <ellipse cx="60" cy="72" rx="30" ry="34" fill="#FFF8E8"/>
+          <path d="M48 68 Q60 74 72 68 M46 78 Q60 84 74 78 M50 88 Q60 92 70 88" stroke="#D7CCC8" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="30,30 42,20 44,38" fill="#6D4C41"/>
+          <polygon points="90,30 78,20 76,38" fill="#6D4C41"/>
+          <ellipse cx="22" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(15 22 70)"/>
+          <ellipse cx="98" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(-15 98 70)"/>
+          <circle cx="44" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="76" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="44" cy="48" r="16" stroke="#D7CCC8" stroke-width="2"/>
+          <circle cx="76" cy="48" r="16" stroke="#D7CCC8" stroke-width="2"/>
+          <circle cx="45" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="75" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="42" cy="45" r="3.5" fill="#FFFFFF"/>
+          <circle cx="72" cy="45" r="3.5" fill="#FFFFFF"/>
+          <polygon points="56,54 64,54 60,63" fill="#FFA726"/>
+          <ellipse cx="32" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="88" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="48" cy="110" rx="6" ry="4" fill="#FFA726"/>
+          <ellipse cx="72" cy="110" rx="6" ry="4" fill="#FFA726"/>
+        </svg>
+
+        <div class="owl-bubble">
+          <div class="owl-bubble-text">Hoot hoot! Who is learning today? 🌟</div>
+          <div class="owl-bubble-hint">Pick your profile card below, or create a new one!</div>
+        </div>
+      </div>
+
+      <div class="profiles-grid" id="profilesGrid">
+        <!-- Dynamically populated from backend -->
+      </div>
+    </section>
+
+    <!-- ─── SCREEN 2: HOME DASHBOARD ─────────────────────────────────── -->
+    <section id="screenHome" class="mb-card hidden">
+      <div class="owl-mascot-container">
+        <!-- Barnaby Owl -->
+        <svg class="owl-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="65" rx="42" ry="46" fill="#8D6E63"/>
+          <ellipse cx="60" cy="72" rx="30" ry="34" fill="#FFF8E8"/>
+          <path d="M48 68 Q60 74 72 68 M46 78 Q60 84 74 78 M50 88 Q60 92 70 88" stroke="#D7CCC8" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="30,30 42,20 44,38" fill="#6D4C41"/>
+          <polygon points="90,30 78,20 76,38" fill="#6D4C41"/>
+          <ellipse cx="22" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(15 22 70)"/>
+          <ellipse cx="98" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(-15 98 70)"/>
+          <circle cx="44" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="76" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="45" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="75" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="42" cy="45" r="3.5" fill="#FFFFFF"/>
+          <circle cx="72" cy="45" r="3.5" fill="#FFFFFF"/>
+          <polygon points="56,54 64,54 60,63" fill="#FFA726"/>
+          <ellipse cx="32" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="88" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="48" cy="110" rx="6" ry="4" fill="#FFA726"/>
+          <ellipse cx="72" cy="110" rx="6" ry="4" fill="#FFA726"/>
+        </svg>
+
+        <div class="owl-bubble">
+          <div class="owl-bubble-text" id="homeWelcomeText">Hi there! What math game shall we play? 🎈</div>
+          <div class="owl-bubble-hint">Choose a topic below or click the microphone to tell me!</div>
+        </div>
+      </div>
+
+      <!-- Personalized Recommendation Banner -->
+      <div id="homeRecBanner" class="rec-card hidden" onclick="startRecommendedQuiz()">
+        <div class="rec-left">
+          <div class="rec-icon" id="homeRecIcon">🎯</div>
+          <div>
+            <div class="rec-title" id="homeRecTitle">Recommendation for you</div>
+            <div class="rec-message" id="homeRecMessage">Let's practice together!</div>
+          </div>
+        </div>
+        <button class="mb-btn mb-btn-small mb-btn-primary">Play Now 🚀</button>
+      </div>
+
+      <!-- Rainbow Topic Cards -->
+      <div style="margin: 24px 0 12px 0;">
+        <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 12px;">1. Choose a Topic 📚</h3>
+        <div class="topics-grid">
+          <div class="topic-tile topic-tile-add selected" id="tileAddition" onclick="selectTopic('addition')">
+            <div class="topic-tile-icon">➕</div>
+            <div class="topic-tile-title">Addition</div>
+            <div class="topic-tile-desc">Joining numbers together</div>
+          </div>
+          <div class="topic-tile topic-tile-sub" id="tileSubtraction" onclick="selectTopic('subtraction')">
+            <div class="topic-tile-icon">➖</div>
+            <div class="topic-tile-title">Subtraction</div>
+            <div class="topic-tile-desc">Taking away numbers</div>
+          </div>
+          <div class="topic-tile topic-tile-mul" id="tileMultiplication" onclick="selectTopic('multiplication')">
+            <div class="topic-tile-icon">✖️</div>
+            <div class="topic-tile-title">Multiplication</div>
+            <div class="topic-tile-desc">Equal groups of numbers</div>
+          </div>
+          <div class="topic-tile topic-tile-div" id="tileDivision" onclick="selectTopic('division')">
+            <div class="topic-tile-icon">➗</div>
+            <div class="topic-tile-title">Division</div>
+            <div class="topic-tile-desc">Sharing equally</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Difficulty Row -->
+      <div style="margin-bottom: 24px;">
+        <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 12px;">2. Choose Difficulty 🎯</h3>
+        <div class="difficulty-row">
+          <button class="diff-btn selected" id="diffEasy" onclick="selectDifficulty('easy')">🟢 Easy (1-10)</button>
+          <button class="diff-btn" id="diffMedium" onclick="selectDifficulty('medium')">🟡 Medium (10-50)</button>
+          <button class="diff-btn" id="diffHard" onclick="selectDifficulty('hard')">🔴 Hard (20-100)</button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+        <button class="mb-btn mb-btn-large mb-btn-primary" onclick="startQuizManual()">
+          🚀 Start Quiz!
+        </button>
+
+        <!-- Voice Start Box -->
+        <button class="mb-btn mb-btn-large mb-btn-lavender" onclick="toggleVoice()">
+          🎤 Speak to Start
+        </button>
+
+        <button class="mb-btn mb-btn-large mb-btn-sky" onclick="showProgressScreen()">
+          📊 View My Stars & Progress
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── SCREEN 3: QUIZ & VOICE INTERACTION ──────────────────────── -->
+    <section id="screenQuiz" class="mb-card hidden">
+      <div class="mb-card-header">
+        <div>
+          <span class="quiz-question-number" id="quizNumberBadge">Question 1</span>
+          <span class="quiz-question-number" id="quizTopicBadge" style="background:var(--mb-mint);">➕ Addition</span>
+          <span class="quiz-question-number" id="quizDiffBadge" style="background:var(--mb-yellow);">🟢 Easy</span>
+        </div>
+        <div>
+          <span style="font-size:1.3rem; font-weight:800;" id="quizScoreText">Score: 0 ⭐</span>
+        </div>
+      </div>
+
+      <!-- Owl Mascot + Speech -->
+      <div class="owl-mascot-container">
+        <svg class="owl-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="65" rx="42" ry="46" fill="#8D6E63"/>
+          <ellipse cx="60" cy="72" rx="30" ry="34" fill="#FFF8E8"/>
+          <path d="M48 68 Q60 74 72 68 M46 78 Q60 84 74 78" stroke="#D7CCC8" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="30,30 42,20 44,38" fill="#6D4C41"/>
+          <polygon points="90,30 78,20 76,38" fill="#6D4C41"/>
+          <ellipse cx="22" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(15 22 70)"/>
+          <ellipse cx="98" cy="70" rx="10" ry="24" fill="#6D4C41" transform="rotate(-15 98 70)"/>
+          <circle cx="44" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="76" cy="48" r="16" fill="#FFFFFF"/>
+          <circle cx="45" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="75" cy="48" r="9" fill="#3B3655"/>
+          <circle cx="42" cy="45" r="3.5" fill="#FFFFFF"/>
+          <circle cx="72" cy="45" r="3.5" fill="#FFFFFF"/>
+          <polygon points="56,54 64,54 60,63" fill="#FFA726"/>
+          <ellipse cx="32" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="88" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+          <ellipse cx="48" cy="110" rx="6" ry="4" fill="#FFA726"/>
+          <ellipse cx="72" cy="110" rx="6" ry="4" fill="#FFA726"/>
+        </svg>
+
+        <div class="owl-bubble">
+          <div class="owl-bubble-text" id="owlQuizBubble">Listen or look at the problem, then tap the mic to answer!</div>
+          <div class="owl-bubble-hint" id="owlQuizHint">You can speak your answer or type it below!</div>
+        </div>
+      </div>
+
+      <!-- Large Math Question Display -->
+      <div class="quiz-question-box">
+        <div class="quiz-math-text" id="quizMathQuestion">What is 3 + 4?</div>
+        <div class="quiz-visual-helper" id="quizVisualHelper">🍎🍎🍎  +  🍎🍎🍎🍎</div>
+      </div>
+
+      <!-- AI Intent Pill (Real-Time Gemini Intent Verification) -->
+      <div class="ai-intent-pill hidden" id="quizIntentPill">
+        <span>✨ Gemini AI Intent:</span>
+        <span id="quizIntentText">—</span>
+      </div>
+
+      <!-- Big Microphone Voice Section (Voice In) -->
+      <div class="voice-panel">
+        <button class="mic-hero-btn" id="quizMicBtn" onclick="toggleVoice()" title="Tap to talk to Barnaby the Owl">
+          🎤
+        </button>
+        <div class="voice-status-indicator" id="voiceStatusIndicator">Tap to talk!</div>
+        <div class="recognized-speech-bubble" id="recognizedSpeechText">I'm waiting to hear your voice! 🎙️</div>
+
+        <!-- Accessible Manual Input -->
+        <div class="keypad-row">
+          <input type="text" class="answer-input-box" id="manualAnswerInput" placeholder="Answer..."
+                 onkeydown="if(event.key==='Enter') submitManualAnswer()" />
+          <button class="mb-btn mb-btn-mint" onclick="submitManualAnswer()" style="min-height:60px; min-width:60px; padding:0 24px;">
+            ✅ Submit
+          </button>
+        </div>
+
+        <!-- Quick Voice Simulation Chips -->
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+          <button class="mb-btn mb-btn-small mb-btn-outline" onclick="simulateVoice('7')">💬 Say "7"</button>
+          <button class="mb-btn mb-btn-small mb-btn-outline" onclick="simulateVoice('Can you explain this?')">💡 "Explain this"</button>
+          <button class="mb-btn mb-btn-small mb-btn-outline" onclick="simulateVoice('Repeat the question')">🔁 "Repeat"</button>
+          <button class="mb-btn mb-btn-small mb-btn-outline" onclick="simulateVoice('Next question')">➡️ "Next question"</button>
+        </div>
+      </div>
+
+      <!-- Feedback Area (Celebration on correct) -->
+      <div class="feedback-box hidden" id="quizFeedbackBox">
+        <div class="feedback-icon" id="feedbackIcon">🎉</div>
+        <div class="feedback-text" id="feedbackText">Superstar! That is correct!</div>
+        <div class="feedback-correct-answer hidden" id="feedbackCorrectAnswer">Correct answer: 7</div>
+      </div>
+
+      <!-- ─── OWL'S MATH ADVENTURE: STEP-BY-STEP EXPLANATION PANEL ─────── -->
+      <div class="explanation-panel hidden" id="mathExplanationPanel">
+        <!-- Header -->
+        <div class="exp-header">
+          <div class="exp-title-row">
+            <span class="exp-owl-badge">🦉 Owl's Math Adventure</span>
+            <span class="exp-step-badge" id="expStepBadge">Step 1 of 4</span>
+          </div>
+          <h3 class="exp-heading" id="expTitle">Let's solve this together! ✨</h3>
+        </div>
+
+        <!-- Step Indicator Dots -->
+        <div class="exp-dots" id="expDots">
+          <!-- Dynamically populated step dots -->
+        </div>
+
+        <!-- Step Narrative Bubble -->
+        <div class="exp-step-narrative">
+          <div class="exp-step-icon" id="expStepIcon">💡</div>
+          <div class="exp-step-text" id="expStepText">We start with 4 sweet red apples.</div>
+        </div>
+
+        <!-- Visual Math Representation (MathVisual) -->
+        <div class="math-visual-container" id="mathVisualContainer">
+          <!-- Dynamically populated by renderMathVisual -->
+        </div>
+
+        <!-- Participatory Follow-up Section -->
+        <div class="exp-followup hidden" id="expFollowUpBox">
+          <div class="exp-followup-icon">🦉💬</div>
+          <div class="exp-followup-content">
+            <div class="exp-followup-question" id="expFollowUpQuestion">Can you count the apples with me?</div>
+            <div class="exp-followup-hint">Tap the mic or try answering with your voice!</div>
+          </div>
+        </div>
+
+        <!-- Control Bar -->
+        <div class="exp-controls">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="mb-btn mb-btn-small mb-btn-lavender" id="expListenBtn" onclick="listenToCurrentStep()">
+              🔊 Listen
+            </button>
+            <button type="button" class="mb-btn mb-btn-small mb-btn-outline" id="expReplayBtn" onclick="replayFullExplanation()">
+              🔁 Full Story
+            </button>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="mb-btn mb-btn-outline" id="expPrevBtn" onclick="prevExplanationStep()" style="display:none;">
+              ◀️ Back
+            </button>
+            <button type="button" class="mb-btn mb-btn-primary" id="expNextBtn" onclick="nextExplanationStep()">
+              Next Step ▶️
+            </button>
+            <button type="button" class="mb-btn mb-btn-mint" id="expTryAgainBtn" onclick="tryQuestionAgain()">
+              🔄 Try Again!
+            </button>
+            <button type="button" class="mb-btn mb-btn-sky hidden" id="expNextQuestionBtn" onclick="nextQuestionFromExplanation()">
+              ➡️ Next Question
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Navigation Actions -->
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="mb-btn mb-btn-primary" onclick="nextQuestion()">➡️ Next Question</button>
+        <button class="mb-btn mb-btn-sky" onclick="requestExplain()">💡 Explain</button>
+        <button class="mb-btn mb-btn-lavender" onclick="repeatQuestion()">🔁 Repeat</button>
+        <button class="mb-btn mb-btn-outline" onclick="finishQuizSession()">🏁 Finish Quiz</button>
+      </div>
+    </section>
+
+    <!-- ─── SCREEN 4: RESULTS CELEBRATION ──────────────────────────── -->
+    <section id="screenResults" class="mb-card results-card hidden">
+      <!-- Barnaby Mascot -->
+      <svg class="owl-svg" style="width:130px; height:130px;" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="65" rx="42" ry="46" fill="#8D6E63"/>
+        <ellipse cx="60" cy="72" rx="30" ry="34" fill="#FFF8E8"/>
+        <polygon points="30,30 42,20 44,38" fill="#6D4C41"/>
+        <polygon points="90,30 78,20 76,38" fill="#6D4C41"/>
+        <!-- Celebrating Wings Raised -->
+        <ellipse cx="16" cy="50" rx="10" ry="24" fill="#6D4C41" transform="rotate(-30 16 50)"/>
+        <ellipse cx="104" cy="50" rx="10" ry="24" fill="#6D4C41" transform="rotate(30 104 50)"/>
+        <circle cx="44" cy="48" r="16" fill="#FFFFFF"/>
+        <circle cx="76" cy="48" r="16" fill="#FFFFFF"/>
+        <circle cx="45" cy="48" r="9" fill="#3B3655"/>
+        <circle cx="75" cy="48" r="9" fill="#3B3655"/>
+        <circle cx="42" cy="45" r="3.5" fill="#FFFFFF"/>
+        <circle cx="72" cy="45" r="3.5" fill="#FFFFFF"/>
+        <polygon points="56,54 64,54 60,63" fill="#FFA726"/>
+        <ellipse cx="32" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+        <ellipse cx="88" cy="58" rx="6" ry="4" fill="#FF80AB" opacity="0.6"/>
+        <ellipse cx="48" cy="110" rx="6" ry="4" fill="#FFA726"/>
+        <ellipse cx="72" cy="110" rx="6" ry="4" fill="#FFA726"/>
+      </svg>
+
+      <h2 class="card-title" style="font-size: 2.2rem; margin-top: 14px;" id="resultsTitle">Hooray! Great Job! 🎉</h2>
+      <p class="card-subtitle" id="resultsSubtitle">You did amazing math practice today!</p>
+
+      <div class="results-stars" id="resultsStars">⭐⭐⭐</div>
+
+      <div class="results-stats-grid">
+        <div class="result-stat-box">
+          <div class="result-stat-num" id="resScore">30</div>
+          <div class="result-stat-lbl">Points Scored</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-num" id="resCorrect">3 / 3</div>
+          <div class="result-stat-lbl">Correct Answers</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-num" id="resAccuracy">100%</div>
+          <div class="result-stat-lbl">Accuracy</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:28px;">
+        <button class="mb-btn mb-btn-large mb-btn-primary" onclick="startQuizManual()">
+          🔄 Play Again
+        </button>
+        <button class="mb-btn mb-btn-large mb-btn-sky" onclick="showProgressScreen()">
+          📊 See My Progress
+        </button>
+        <button class="mb-btn mb-btn-large mb-btn-outline" onclick="goHome()">
+          🏠 Home
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── SCREEN 5: PROGRESS & PERSONALIZED RECOMMENDATIONS ──────── -->
+    <section id="screenProgress" class="mb-card hidden">
+      <div class="mb-card-header">
+        <div>
+          <h2 class="card-title" id="progressHeaderName">Leo's Math Journey 🌟</h2>
+          <p class="card-subtitle">Track your stars, topics, and personalized recommendations!</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="mb-btn mb-btn-small mb-btn-outline" onclick="openEditProfileModal()">✏️ Edit Profile</button>
+          <button class="mb-btn mb-btn-small mb-btn-primary" onclick="goHome()">🏠 Back to Games</button>
+        </div>
+      </div>
+
+      <!-- Child Overview Banner -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:28px;">
+        <div style="background:var(--mb-yellow); border-radius:22px; padding:20px; text-align:center;">
+          <div style="font-size:2.4rem; font-weight:900;" id="progTotalStars">0 ⭐</div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--mb-text);">Total Stars Earned</div>
+        </div>
+        <div style="background:var(--mb-mint); border-radius:22px; padding:20px; text-align:center;">
+          <div style="font-size:2.4rem; font-weight:900;" id="progAccuracy">0%</div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--mb-text);">Overall Accuracy</div>
+        </div>
+        <div style="background:var(--mb-sky); border-radius:22px; padding:20px; text-align:center;">
+          <div style="font-size:2.4rem; font-weight:900;" id="progQuestions">0</div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--mb-text);">Questions Solved</div>
+        </div>
+        <div style="background:var(--mb-lavender); border-radius:22px; padding:20px; text-align:center;">
+          <div style="font-size:2.4rem; font-weight:900;" id="progQuizzes">0</div>
+          <div style="font-size:0.95rem; font-weight:800; color:var(--mb-text);">Quizzes Completed</div>
+        </div>
+      </div>
+
+      <!-- Personalized Recommendations Grounded in Real Data -->
+      <div style="margin-bottom:32px;">
+        <h3 class="card-title" style="font-size:1.5rem;">🦉 Barnaby's Recommendations for You</h3>
+        <p class="card-subtitle">Custom suggestions based on your practice and quiz history</p>
+        <div class="recs-container" id="recsContainer">
+          <!-- Dynamically populated from /api/children/{id}/progress -->
+        </div>
+      </div>
+
+      <!-- Topic Mastery Breakdown -->
+      <div style="margin-bottom:32px;">
+        <h3 class="card-title" style="font-size:1.5rem;">📚 Topic Mastery</h3>
+        <div class="mastery-grid" id="masteryGrid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Parent View Toggle (Detailed Attempt Tracking) -->
+      <div style="border-top: 3px dashed var(--mb-cream); padding-top:24px; margin-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:1.2rem; font-weight:800; color:var(--mb-text);">📋 Detailed Quiz Session History</h4>
+          <button class="parent-toggle-btn" id="parentToggleBtn" onclick="toggleParentView()">Parent View: Show Table</button>
+        </div>
+
+        <div id="parentHistoryContainer" class="hidden">
+          <table class="parent-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Topic</th>
+                <th>Level</th>
+                <th>Tried</th>
+                <th>Correct</th>
+                <th>Score</th>
+                <th>Stars</th>
+              </tr>
+            </thead>
+            <tbody id="parentSessionsBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Danger Zone: Safe Delete Profile -->
+        <div style="margin-top:28px; text-align:right;">
+          <button class="mb-btn mb-btn-small" style="background:#ff7675; color:white;" onclick="confirmDeleteChild()">
+            🗑️ Delete Child Profile
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── MODAL: CREATE / EDIT CHILD PROFILE ───────────────────────── -->
+  <div class="modal-overlay hidden" id="profileModal">
+    <div class="modal-content">
+      <h3 class="card-title" id="modalTitle">New Learner Profile 🌟</h3>
+      <p class="card-subtitle" style="margin-bottom:20px;">Tell Barnaby who is playing today!</p>
+
+      <form id="childForm" onsubmit="saveChildProfile(event)">
+        <input type="hidden" id="childFormId" value="" />
+
+        <div class="form-group">
+          <label class="form-label" for="childNameInput">Child's Name</label>
+          <input type="text" class="form-input" id="childNameInput" placeholder="e.g. Leo, Mia, Alex" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="childAgeInput">Age (years)</label>
+          <select class="form-input" id="childAgeInput" style="cursor:pointer;" required>
+            <option value="4">4 years old (Pre-K)</option>
+            <option value="5" selected>5 years old (Kindergarten)</option>
+            <option value="6">6 years old (1st Grade)</option>
+            <option value="7">7 years old (2nd Grade)</option>
+            <option value="8">8 years old (3rd Grade)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Choose a Friendly Avatar</label>
+          <div class="avatar-selector">
+            <div class="avatar-choice selected" onclick="selectAvatar('owl')" data-avatar="owl">🦉</div>
+            <div class="avatar-choice" onclick="selectAvatar('fox')" data-avatar="fox">🦊</div>
+            <div class="avatar-choice" onclick="selectAvatar('frog')" data-avatar="frog">🐸</div>
+            <div class="avatar-choice" onclick="selectAvatar('bunny')" data-avatar="bunny">🐰</div>
+            <div class="avatar-choice" onclick="selectAvatar('lion')" data-avatar="lion">🦁</div>
+            <div class="avatar-choice" onclick="selectAvatar('bear')" data-avatar="bear">🐻</div>
+          </div>
+          <input type="hidden" id="selectedAvatar" value="owl" />
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:28px;">
+          <button type="button" class="mb-btn mb-btn-outline" onclick="closeProfileModal()">Cancel</button>
+          <button type="submit" class="mb-btn mb-btn-primary">Save Profile ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js?v=3.0"></script>
+</body>
+</html>
